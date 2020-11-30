@@ -3,6 +3,7 @@ library(xlsx)
 library(stringr)
 library(tidyr)
 library(tidyverse)
+library(ggplot2)
 
 
 src <- read.csv('/Users/vigneshthanigaisivabalan/NEU/DM/Project/bank-additional/bank-additional-full.csv',TRUE, sep = ';')
@@ -26,10 +27,18 @@ summary(src) # to display the statistics of each of column
 # to find the number categories in each of the categorical variable we are dealing with
 
 src.chr <- Filter(is.character,src)
+categ = NULL
+categ1 = NULL
 for (i in names(src.chr)) {
-  ifelse(length(factor(src.chr[i])) < 5, factor(src.chr[i]),0)
+  categ = rbind(categ,i)
 }
-ifelse(length(factor(src.chr)) < 5, factor(src.chr),0)
+
+for (i in names(src.chr)) {
+  categ1 = rbind(categ1,unique(src.chr[,i]))
+}
+
+categ = cbind(categ,categ1)
+
 
 # interpreting the boxplot of the numerical data to check for outliers
 
@@ -54,6 +63,7 @@ dev.off()
 ggplot(data=src, xName='Age')+
   geom_histogram(aes(x=age, fill =..count..),binwidth = 1)+scale_fill_gradient("Count", low = "green", high = "red")
 
+ggplot(data=src, xName='Age')+geom_boxplot(aes(y=age))
 
 # For Previous
 
@@ -84,7 +94,9 @@ ggplot(data=src, xName='Age')+
 
 # For Cons.conf.idx
 
-ggplot(data = src,aes(x=cons.conf.idx))+geom_bar()+
+ggplot(data = src)+geom_bar(aes(x=cons.conf.idx))
   
-  
+
+
+####      ONE HOT ENCODING  
   
