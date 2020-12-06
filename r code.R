@@ -5,6 +5,9 @@ library(tidyr)
 library(tidyverse)
 library(ggplot2)
 library(dummies)
+library(caret)
+library(corrplot)
+library(psych)
 
 
 src <- read.csv('/Users/vigneshthanigaisivabalan/NEU/DM/Project/bank-additional/bank-additional-full.csv',TRUE, sep = ';')
@@ -133,6 +136,9 @@ ggplot(data= src)+ geom_bar(aes(x= month, fill = month))
 colSums(is.na(src)) 
 
 
+########## Checking for MultiColinearty
+
+plot(src.numeric)
 
 # to find the number categories in each of the categorical variable we are dealing with
 
@@ -151,15 +157,64 @@ for (i in names(src.chr)) {
 
 categ = cbind(categ,categ1)
 
+
+
+
 ####      ONE HOT ENCODING  
 
 ## we can use both dummies or use contrast to create the factors for each of the categorical variable
 
 ## using contracts
 
+dumme <- dummyVars(" ~ .", data = src.chr[-11])
+srcc1 <- data.frame(predict(dumme, newdata = src.chr[-11]))
 
-contrasts(as.factor(src$marital))
+#### Summary Feature Engineering
 
-dummy(src$marital)
+sprintf("The total number of columns in the intial dataset %d", length(src))
+sprintf("The total number of Categorical Features %d", length(src.chr))
+sprintf("The total number of Numerical Features %d", length(src.numeric))
+sprintf("The total number of columns after feature engineering %d", length(src1))
+print("The New Dummy variables added data frame")
+names(src1)
 
-table(src$marital)
+
+######## Standarising the data
+
+normalize <-function(x) {return((x -min(x))) / (max(x) -min(x))}
+
+src.numeric.std <- sapply(src.numeric, function(x) normalize)
+src.df <- cbind(src.numeric,srcc1)
+src.df$y <- src$y
+###### Dimension Reduction
+
+# Perform Scree Plot and Parallel Analysis
+
+fa.parallel(src.numeric, fa = "pc", n.iter = 100, show.legend = FALSE)
+
+pc <-principal(df.norm[, 1:47], nfactors = 5, rotate = "none", scores = TRUE)
+pc <-cbind(as.data.frame(pc$scores), df.norm$PHISHING_WEBSITE) %>%rename(PHISHING_WEBSITE = "df.norm$PHISHING_WEBSITE")
+
+
+pca <- principal(src.numeric[,1:10],nfactors = 5, rotate = "none", scores = TRUE)
+pca$scores
+
+principal(src.numeric,nfactors=5,rotate="none")
+
+### Training & Test Data Generation
+
+
+## For PCA less data 
+set.seed(99)
+train.index <- sample(row.names(src.df), 0.6*dim(src.df)[1])
+valid.index <- setdiff(row.names(src.df), train.index)
+train.df <- src.df[train.index,]
+valid.df <- src.df[valid.index,]
+
+
+## For PCA applied data
+
+
+
+
+
