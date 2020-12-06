@@ -4,6 +4,7 @@ library(stringr)
 library(tidyr)
 library(tidyverse)
 library(ggplot2)
+library(dummies)
 
 
 src <- read.csv('/Users/vigneshthanigaisivabalan/NEU/DM/Project/bank-additional/bank-additional-full.csv',TRUE, sep = ';')
@@ -22,22 +23,6 @@ head(src) # to display a sample of the data
 length(src) # to display the total size of the dataset
 
 summary(src) # to display the statistics of each of column
-
-
-# to find the number categories in each of the categorical variable we are dealing with
-
-src.chr <- Filter(is.character,src)
-categ = NULL
-categ1 = NULL
-for (i in names(src.chr)) {
-  categ = rbind(categ,i)
-}
-
-for (i in names(src.chr)) {
-  categ1 = rbind(categ1,unique(src.chr[,i]))
-}
-
-categ = cbind(categ,categ1)
 
 
 # interpreting the boxplot of the numerical data to check for outliers
@@ -98,5 +83,83 @@ ggplot(data = src)+geom_bar(aes(x=cons.conf.idx))
   
 
 
+#### Graphical interperatation for Cateogorical variables
+
+
+# For education:
+
+ggplot(data = src)+geom_bar(aes(x=education, fill = education))
+
+
+## For Martial Status
+
+ggplot(data = src)+geom_bar(aes(x=marital, fill= marital))
+
+
+## For Type of Jobs
+
+ggplot(data = src)+ geom_bar(aes(x= job, fill = job))
+
+## For Previous Call outcome
+
+ggplot(data = src)+geom_bar(aes(x=poutcome, fill = poutcome))
+
+
+## For  housing 
+
+ggplot(data = src)+ geom_bar(aes(x= housing, fill = housing))
+
+
+## For loan
+
+ggplot(data =src)+ geom_bar(aes(x= loan, fill = loan))
+
+
+## For defaulters
+
+ggplot(data = src)+geom_bar(aes(x=default, fill = default))
+
+## For Type of Contact made
+
+ggplot(data = src)+geom_bar(aes(x= contact, fill = contact))
+
+
+### For month
+
+ggplot(data= src)+ geom_bar(aes(x= month, fill = month))
+
+# no of null records in the dataset
+
+colSums(is.na(src)) 
+
+
+
+# to find the number categories in each of the categorical variable we are dealing with
+
+sapply(src.chr, function(x) length(unique(x)))
+
+src.chr <- Filter(is.character,src)
+categ = NULL
+categ1 = NULL
+for (i in names(src.chr)) {
+  categ = rbind(categ,i)
+}
+
+for (i in names(src.chr)) {
+  categ1 = rbind(categ1,unique(src.chr[,i]))
+}
+
+categ = cbind(categ,categ1)
+
 ####      ONE HOT ENCODING  
-  
+
+## we can use both dummies or use contrast to create the factors for each of the categorical variable
+
+## using contracts
+
+
+contrasts(as.factor(src$marital))
+
+dummy(src$marital)
+
+table(src$marital)
