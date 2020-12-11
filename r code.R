@@ -169,6 +169,9 @@ categ = cbind(categ,categ1)
 dumme <- dummyVars(" ~ .", data = src.chr[-11])
 srcc1 <- data.frame(predict(dumme, newdata = src.chr[-11]))
 
+df<-dummy.data.frame(src.chr,names=c("job","marital","education","default","housing","loan","contact","month","day_of_week","poutcome"))
+
+
 #### Summary Feature Engineering
 
 sprintf("The total number of columns in the intial dataset %d", length(src))
@@ -196,10 +199,11 @@ pc <-principal(df.norm[, 1:47], nfactors = 5, rotate = "none", scores = TRUE)
 pc <-cbind(as.data.frame(pc$scores), df.norm$PHISHING_WEBSITE) %>%rename(PHISHING_WEBSITE = "df.norm$PHISHING_WEBSITE")
 
 
-pca <- principal(src.numeric[,1:10],nfactors = 5, rotate = "none", scores = TRUE)
+pca <- principal(src.numeric[,1:10],nfactors = 4, rotate = "none", scores = TRUE)
+pca
 pca$scores
 
-principal(src.numeric,nfactors=5,rotate="none")
+principal(src.numeric,nfactors=4,rotate="none")
 
 ### Training & Test Data Generation
 
