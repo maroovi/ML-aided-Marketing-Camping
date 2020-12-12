@@ -193,7 +193,7 @@ names(src1)
 normalize <-function(x) {return((x -min(x))) / (max(x) -min(x))}
 
 src.numeric.std <- as.data.frame(lapply(src.numeric, normalize))
-src.chr$y <- as.factor(ifelse(src$y == "yes", 1,0))
+src.chr$y <- as.factor(ifelse(src$y == "yes", 1,0))  ## execute KNN first then run this 
 
 srcc1$y <- src.chr$y
 srcc2$y <- src.chr$y
@@ -315,13 +315,13 @@ logi.model.pca.fit <- predict.glm(logi.model.ori.red,valid.df,type="response", s
 ## PCA Data
 set.seed(20)
 dctree.model.pca <-rpart(y ~ ., data = train.pca.df, method = "class", cp = 0.00001, minsplit = 2, xval = 5)
-rpart.plot(dctree.model.pca, main = "Classification Tree using PCA data")
+rpart.plot(dctree.model.pca, main = "Classification Tree using PCA data") # Full Grown Tree
 
 
 ### pruning data 
 
 dctree.model.pca.prune <- prune(dctree.model.pca,cp=dctree.model.pca$cptable[which.min(dctree.model.pca$cptable[,"xerror"]), "CP"])
-rpart.plot(dctree.model.pca.prune,type =2, main = "Pruned Classification Tree using PCA data")
+rpart.plot(dctree.model.pca.prune,type =2, main = "Pruned Classification Tree using PCA data")  #Pruned Tree
 
 
 ## Original Data
@@ -349,4 +349,11 @@ formu = y ~ age + duration + campaign + pdays + previous + emp.var.rate + cons.p
   default_yes + housing_unknown + housing_yes + loan_unknown + loan_yes + contact_telephone + month_aug + month_dec + month_jul + 
   month_jun + month_mar + month_may + month_nov + month_oct + month_sep + day_of_week_mon + day_of_week_thu + day_of_week_tue + day_of_week_wed + poutcome_nonexistent + poutcome_success
 
-nn.model.pca <-neuralnet(y~.,train.pca.df,hidden = 3, linear.output = T)
+trainin <- train.pca.df
+trainin$yes <- train.pca.df == 1
+trainin$no <- train.pca.df==0
+
+nn.model.pca <-neuralnet( y ~ PC1 + PC2 + PC3 + PC4+job_entrepreneur+job_housemaid+job_management + job_retired +poutcome_success, 
+                          data = train.pca.df,hidden = 3,act.fct = "logistic",linear.output = FALSE)
+
+
