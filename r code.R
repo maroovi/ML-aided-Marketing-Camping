@@ -14,6 +14,7 @@ library(rpart.plot)
 library(boot)
 library(tree)
 library(neuralnet)
+library(caret)
 src <- read.csv('/Users/vigneshthanigaisivabalan/NEU/DM/Project/bank-additional/bank-additional-full.csv',TRUE, sep = ';')
 
 
@@ -53,87 +54,83 @@ dev.off()
 # For Age
 
 ggplot(data=src, xName='Age')+
-  geom_histogram(aes(x=age, fill =..count..),binwidth = 1)+scale_fill_gradient("Count", low = "green", high = "red")
+  geom_histogram(aes(x=age, fill =..count..),binwidth = 1)+scale_fill_gradient("Count", low = "green", high = "red")+
+  labs(title = "Age Count Distribution")+ theme(legend.position = "none")
 
-ggplot(data=src, xName='Age')+geom_boxplot(aes(y=age))
+ggplot(data=src, xName='Age')+geom_boxplot(aes(y=age))+ theme(axis.ticks.x=element_blank(),axis.text.x=element_blank())+
+  labs(title = "Age Distribution", x =" People Age")
 
 # For Previous
 
-ggplot(data=src, xName='Previous Contacts')+
+plt1 <-ggplot(data=src, xName='Previous Contacts')+
   geom_bar(aes(x=previous, fill =..count..),binwidth = 1)+scale_fill_gradient("Count", low = "blue", high = "orange")
 
+pl1t+scale_x_continuous(n.breaks = 10)
 
 # For Duration
 
-ggplot(data = src)+geom_density(aes(x=duration/60),fill="#69b3a2", color="#e9ecef", alpha=0.8)+xlim(0,40) # to show on average how much duration each call last
+ggplot(data = src)+geom_density(aes(x=duration/60),fill="#69b3a2", color="#e9ecef", alpha=0.8)+xlim(0,40)+
+  labs(title = "Average Call Duration", x =" Call Duration in min")# to show on average how much duration each call last
 
 
 ## For Emp. Rate
 
 
-ggplot(data = src,aes(x=emp.var.rate))+geom_bar()+
-  scale_x_continuous(breaks=c(1.1,1.4,-0.1,-0.2,-1.8,-2.9,-3.4,-3.0,-1.7,-1.1), labels=c("1.1","1.4","-0.1","-0.2","-1.8","-2.9","-3.4","-3.0","-1.7","-1.1"))
+ggplot(data = src,aes(x=emp.var.rate))+geom_bar()+scale_x_continuous(breaks = round(seq(min(src$emp.var.rate), max(src$emp.var.rate), by = 0.5),1))+
+  labs(title = "Emp.Var.Rate")
 
-#scale_fill_manual(as.factor(src$emp.var.rate))
-
-#scale_fill_gradient(exlabl)
 
 ggplot(data = src)+geom_density(aes(x=emp.var.rate),fill="#69b3a2", color="#e9ecef", alpha=0.8) # to show on average how much duration each call last
 
-ggplot(data=src, xName='Age')+
-  geom_histogram(aes(x=emp.var.rate)) +scale_x_continuous(breaks=c(1.1,1.4,-0.1,-0.2,-1.8,-2.9,-3.4,-3.0,-1.7,-1.1), labels=c("1.1","1.4","-0.1","-0.2","-1.8","-2.9","-3.4","-3.0","-1.7","-1.1"))
-
-
 # For Cons.conf.idx
 
-ggplot(data = src)+geom_bar(aes(x=cons.conf.idx))
-  
-
+ggplot(data = src,aes(x=cons.conf.idx))+geom_bar()+scale_x_continuous(breaks = round(seq(min(src$cons.conf.idx), max(src$cons.conf.idx), by = 0.5),1))+
+  labs(title = "Cons.Conf.idx")
 
 #### Graphical interperatation for Cateogorical variables
 
 
 # For education:
 
-ggplot(data = src)+geom_bar(aes(x=education, fill = education))
-
+ggplot(data = src)+geom_bar(aes(x=education, fill = education))+labs(title = "Categories in Education", x= "Education Received")+ theme(legend.position = "none")
 
 ## For Martial Status
 
-ggplot(data = src)+geom_bar(aes(x=marital, fill= marital))
-
+ggplot(data = src)+geom_bar(aes(x=marital, fill= marital))+labs(title = "Marital Categories", x= "Marital Status")+ theme(legend.position = "none")
 
 ## For Type of Jobs
 
-ggplot(data = src)+ geom_bar(aes(x= job, fill = job))
+ggplot(data = src)+ geom_bar(aes(x= job, fill = job))+labs(title = "Job Categories", x= "Types of jobs")+ theme(legend.position = "none")
 
 ## For Previous Call outcome
 
-ggplot(data = src)+geom_bar(aes(x=poutcome, fill = poutcome))
-
+ggplot(data = src)+geom_bar(aes(x=poutcome, fill = poutcome))+labs(title = "Previous Marketing Campaign Outcome", x= "Previous Outcomes", y="Number of Previous Outcomes")+
+  theme(legend.position = "none")
 
 ## For  housing 
 
-ggplot(data = src)+ geom_bar(aes(x= housing, fill = housing))
-
+ggplot(data = src)+ geom_bar(aes(x= housing, fill = housing))+labs(title = "Housing Loan History", x= "Previous Housing Loan", y="Number")+
+  theme(legend.position = "none")
 
 ## For loan
 
-ggplot(data =src)+ geom_bar(aes(x= loan, fill = loan))
-
+ggplot(data =src)+ geom_bar(aes(x= loan, fill = loan))+labs(title = "Personal Loan History", x= "Previous Personal Loan", y="Number")+
+  theme(legend.position = "none")
 
 ## For defaulters
 
-ggplot(data = src)+geom_bar(aes(x=default, fill = default))
+ggplot(data = src)+geom_bar(aes(x=default, fill = default))+labs(title = "Credit Defaulters", x= "Previous Credit Default", y="Number")+
+  theme(legend.position = "none")
 
 ## For Type of Contact made
 
-ggplot(data = src)+geom_bar(aes(x= contact, fill = contact))
-
+ggplot(data = src)+geom_bar(aes(x= contact, fill = contact))+labs(title = "Communication Type Used", y="Number")+
+  theme(legend.position = "none", axis.text.x=element_blank(),axis.ticks.x=element_blank())
 
 ### For month
 
-ggplot(data= src)+ geom_bar(aes(x= month, fill = month))
+ggplot(data= src)+ geom_bar(aes(x= month, fill = month))+labs(title = "Previous Contacted", y="Number")+
+  theme(legend.position = "none")
 
 # no of null records in the dataset
 
@@ -167,16 +164,11 @@ categ = cbind(categ,categ1)
 
 ####      ONE HOT ENCODING  
 
-## we can use both dummies or use contrast to create the factors for each of the categorical variable
-
-## using contracts
-
-dumme <- dummyVars(" ~ .", data = src.chr[-11]) ### having issue
-srcc1 <- data.frame(predict(dumme, newdata = src.chr[-11])) ### having issue
-
 srcc2 <- fastDummies::dummy_cols(src.chr[-11], remove_first_dummy = TRUE)
 srcc2<- srcc2[,-c(1:10)]
 
+colnames(srcc2)[1] <- "job_blue_collar"  ## Standardizing the column name 
+colnames(srcc2)[6] <- "job_self_employed" ## Standardizing the column name 
 
 #### Summary Feature Engineering
 
@@ -195,13 +187,9 @@ normalize <-function(x) {return((x -min(x))) / (max(x) -min(x))}
 src.numeric.std <- as.data.frame(lapply(src.numeric, normalize))
 src.chr$y <- as.factor(ifelse(src$y == "yes", 1,0))  ## execute KNN first then run this 
 
-srcc1$y <- src.chr$y
 srcc2$y <- src.chr$y
 
 srcc1 <- srcc2
-
-srcc1<-src.chr
-
 
 ###### Dimension Reduction
 
@@ -233,34 +221,6 @@ train.pca.df <- pca[train.index,]
 valid.pca.df <- pca[valid.index,]
 
 
-###### Evaluating Performance
-
-performance_list <-data.frame("Model" = character(),"AUC" = numeric(),"Accuracy" = numeric())
-
-model_names <-list()
-lift_charts <-list()
-roc_curves <-list()
-
-evaluate_performance <-function(pred, labels, model_name) {
-  model_names[[length(model_names) + 1]] <<-model_name
-  # Accuracy
-  pred.class <-ifelse(slot(pred, "predictions")[[1]] > 0.5, "Yes", "No")
-  levels(pred.class) <-make.names(levels(factor(pred.class)))
-  acc <-confusionMatrix(table(pred.class, labels))$overall[[1]] * 100
-  # ROC Plot
-  roc <-performance(pred, "tpr", "fpr")
-  plot(roc, col = "red", lwd = 2, main = paste0(model_name, " ROC Curve"))abline(a = 0, b = 1)
-  roc_curves[[length(roc_curves) + 1]] <<-roc
-  auc <-performance(pred, measure = "auc")
-  temp <-data.frame("Model" = model_name,"AUC" = auc@y.values[[1]],"Accuracy" = acc)
-  performance_list <<-rbind(performance_list, temp)
-  print("Updated Performance List")
-  lift <-performance(pred, "tpr", "rpp")
-  plot(lift, main = paste0(model_name, " Lift Curve"), col = "green")abline(a = 0, b = 1)
-  lift_charts[[length(lift_charts) + 1]] <<-liftrm(list = c("auc", "acc", "roc", "pred.class", "temp", "lift"))
-}
-
-
 #######  KNN Model
 
 tr.control <- trainControl(method = "repeatedcv",number = 10,repeats = 3,classProbs = TRUE,summaryFunction = twoClassSummary)
@@ -272,11 +232,8 @@ plot(knn.model)
 knn.valid_pred <- predict(knn.model,valid.df, type = "prob")
 knn.prediction <-prediction(knn.valid_pred[, 2], valid.df$y)
 
-
-
 perf_val <- performance(knn.model, "tpr", "fpr")
 plot(perf_val, col = "green", lwd = 1.5)
-
 
 ###### Logistic Regression
 
@@ -291,7 +248,6 @@ summary(logi.model.pca)
 anova(logi.model.pca, logi.model.pca.red, test = "Chisq")
 
 logi.model.pca.fit <- predict.glm(logi.model.pca,valid.pca.df,type="response", se.fit = TRUE)
-
 
 
 ### Original Data
@@ -326,34 +282,70 @@ rpart.plot(dctree.model.pca.prune,type =2, main = "Pruned Classification Tree us
 
 ## Original Data
 set.seed(20)
-dctree.model.ori <-rpart(y ~ ., data = train.pca.df, method = "class")
-rpart.plot(dctree.model.ori, main = "Classification Tree using PCA data")
+dctree.model.ori <-rpart(y ~ ., data = train.pca.df, method = "class",cp = 0.00001, minsplit = 2, xval = 5)
+rpart.plot(dctree.model.ori, main = "Classification Tree using Original data")
 
 
 ### pruning data 
 
 dctree.model.ori.prune <- prune(dctree.model.pca,cp=dctree.model.pca$cptable[which.min(dctree.model.pca$cptable[,"xerror"]), "CP"])
-rpart.plot(dctree.model.ori.prune,type =2, main = "Pruned Classification Tree using PCA data")
+rpart.plot(dctree.model.ori.prune,type =2, main = "Pruned Classification Tree using Original data")
 
 
 #####  Neural Networks
 
-#### PCA Dataset
+### Dataset Preparation For PCA
 
-set.seed(20)
+trainpca <- train.pca.df
+validpca <- valid.pca.df
 
-formu = y ~ age + duration + campaign + pdays + previous + emp.var.rate + cons.price.idx + cons.conf.idx + euribor3m + nr.employed + 
-  `job_blue-collar` + job_entrepreneur + job_housemaid + job_management + job_retired + `job_self-employed` + job_services + job_student + 
-  job_technician + job_unemployed + job_unknown + marital_married + marital_single + marital_unknown + education_basic.6y + education_basic.9y + 
-  education_high.school + education_illiterate + education_professional.course + education_university.degree + education_unknown + default_unknown + 
-  default_yes + housing_unknown + housing_yes + loan_unknown + loan_yes + contact_telephone + month_aug + month_dec + month_jul + 
-  month_jun + month_mar + month_may + month_nov + month_oct + month_sep + day_of_week_mon + day_of_week_thu + day_of_week_tue + day_of_week_wed + poutcome_nonexistent + poutcome_success
+trainpca$yes <- trainpca$y==1
+trainpca$no <- trainpca$y==0
 
-trainin <- train.pca.df
-trainin$yes <- train.pca.df == 1
-trainin$no <- train.pca.df==0
+validpca$yes <- validpca$y== 1
+validpca$no <- validpca$y== 0
 
-nn.model.pca <-neuralnet( y ~ PC1 + PC2 + PC3 + PC4+job_entrepreneur+job_housemaid+job_management + job_retired +poutcome_success, 
-                          data = train.pca.df,hidden = 3,act.fct = "logistic",linear.output = FALSE)
+### Dataset Preparation For Orig data
+
+trainori <- train.df
+validori <- valid.df
+
+trainori$yes <- trainori$y==1
+trainori$no <- trainori$y==0
+
+validori$yes <- validori$y== 1
+validori$no <- validori$y== 0
+
+## Model Building
+
+# For PCA dataset
+nn.model.pca <-neuralnet( yes+no ~ PC1 + PC2 + PC3 + PC4 + job_blue_collar + job_entrepreneur + job_housemaid + job_management + job_retired + job_self_employed + job_services + job_student + 
+                            job_technician + job_unemployed + job_unknown + marital_married + marital_single + marital_unknown + education_basic.6y + education_basic.9y + 
+                            education_high.school + education_illiterate + education_professional.course + education_university.degree + education_unknown + default_unknown+
+                            default_yes + housing_unknown + housing_yes + loan_unknown + loan_yes + contact_telephone + month_aug + month_dec + month_jul + 
+                            month_jun + month_mar + month_may + month_nov + month_oct + month_sep + day_of_week_mon + day_of_week_thu + day_of_week_tue + day_of_week_wed +
+                            poutcome_nonexistent + poutcome_success,
+                          data = trainpca,hidden = 3,act.fct = "logistic",linear.output = FALSE)
+
+plot(nn.model.pca, main = "Artificial Neural Net (PCA)",type=best)
+
+nn.pca.pred <-neuralnet::compute(nn.model.pca, validpca[, 1:48])
+predicted.class=apply(nn.pca.pred$net.result,1,which.max)-1
+confusionMatrix(factor(ifelse(predicted.class==1, "1", "0")),validpca$y)
 
 
+# For Original dataset
+nn.model.ori <-neuralnet( yes+no ~ age + duration + campaign + pdays+previous+emp.var.rate+cons.price.idx+cons.conf.idx+euribor3m+nr.employed +
+                            job_blue_collar + job_entrepreneur + job_housemaid + job_management + job_retired + job_self_employed + job_services + job_student + 
+                            job_technician + job_unemployed + job_unknown + marital_married + marital_single + marital_unknown + education_basic.6y + education_basic.9y + 
+                            education_high.school + education_illiterate + education_professional.course + education_university.degree + education_unknown + default_unknown+
+                            default_yes + housing_unknown + housing_yes + loan_unknown + loan_yes + contact_telephone + month_aug + month_dec + month_jul + 
+                            month_jun + month_mar + month_may + month_nov + month_oct + month_sep + day_of_week_mon + day_of_week_thu + day_of_week_tue + day_of_week_wed +
+                            poutcome_nonexistent + poutcome_success,
+                          data = trainori,hidden = 3,act.fct = "logistic",linear.output = FALSE)
+
+plot(nn.model.ori, main = "Artificial Neural Net Original")
+
+nn.ori.pred <-neuralnet::compute(nn.model.ori, validori[, 1:54])
+predicted.class=apply(nn.ori.pred$net.result,1,which.max)-1
+confusionMatrix(factor(ifelse(predicted.class==1, "1", "0")),validpca$y)
