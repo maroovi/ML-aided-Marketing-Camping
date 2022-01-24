@@ -60,8 +60,9 @@ demographic of customers are the golden goose here.
 
 ## Running Tests 
 
-
-
+<img width="750" alt="Screen Shot 2022-01-24 at 2 05 02 PM" src="https://user-images.githubusercontent.com/60556766/150850004-dba3c00d-4e15-4e23-8f16-4ad53d3bc7a5.png">
+<img width="750" alt="Screen Shot 2022-01-24 at 2 05 39 PM" src="https://user-images.githubusercontent.com/60556766/150850008-e7fa36d8-77d7-48dc-b894-9c646f5c2d80.png">
+<img width="500" alt="Screen Shot 2022-01-24 at 2 05 59 PM" src="https://user-images.githubusercontent.com/60556766/150850010-43800632-53f2-43ed-a0af-abf10c16e1e6.png">
 
 ## Lessons Learned
 
