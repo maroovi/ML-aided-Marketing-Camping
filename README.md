@@ -66,6 +66,8 @@ demographic of customers are the golden goose here.
 
 ## Lessons Learned
 
+<img width="750" alt="Screen Shot 2022-01-24 at 2 06 11 PM" src="https://user-images.githubusercontent.com/60556766/150850237-0a7ae291-ade7-4e16-ab8a-ce204f7107e3.png">
+
 We will start with multiple models using PCA data and the original data. We have 
 identified that the Logistic Regression model with the PCA data has better performance 
 compared to the other models that we have here. However, given the condition of having 
