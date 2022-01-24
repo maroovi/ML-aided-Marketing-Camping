@@ -21,7 +21,7 @@ demographic of customers are the golden goose here.
 - Lesson
 - Acknowledgements
 
-## Authors
+## Author
 
 - [@vignesh](https://github.com/maroovi)
 
@@ -55,10 +55,10 @@ demographic of customers are the golden goose here.
 
 - traditionally we follow the same data mining approach towards this campign
 
+ <img src="/Users/vigneshthanigaisivabalan/Desktop/Screen Shot 2022-01-24 at 2.04.10 PM", width="100", height="75">
 
 
-
-## Running Tests
+## Running Tests 
 
 
 
