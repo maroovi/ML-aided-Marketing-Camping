@@ -55,7 +55,7 @@ demographic of customers are the golden goose here.
 
 - traditionally we follow the same data mining approach towards this campign
 
- <img src="https://user-images.githubusercontent.com/60556766/150848755-75afd4d8-3ed4-4a85-885b-b8ebb73ab83c.png", width="100", height="75">
+ <img src="https://user-images.githubusercontent.com/60556766/150848755-75afd4d8-3ed4-4a85-885b-b8ebb73ab83c.png" width="100">
 
 
 ## Running Tests 
